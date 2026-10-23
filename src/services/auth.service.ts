@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import { AppError } from "../errors/AppError";
-import { findUserByEmail, createUser, findUserByEmailWithPassword } from "../repositories/user.repository";
+import { findUserByEmail, createUser, findUserByEmailWithPassword, findUserByGoogleId, linkGoogleIdToUser, createGoogleUser } from "../repositories/user.repository";
 import { signAccessToken } from "../libs/jwt";
+import { getGoogleAuthUrl, getGoogleUserFromAuthCode } from "../libs/google";
 
 export async function registerUser(
     email: string,
@@ -52,6 +53,32 @@ export async function loginUser(
 
     if (!isPasswordValid) {
         throw new AppError("Invalid email or password", 401);
+    }
+
+    const accessToken = signAccessToken({
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+    });
+
+    return { accessToken };
+}
+
+export function startGoogleLogin(): string {
+    return getGoogleAuthUrl();
+}
+export async function loginWithGoogle(code: string): Promise<{ accessToken: string }> {
+    const googleProfile = await getGoogleUserFromAuthCode(code);
+    let user = await findUserByGoogleId(googleProfile.googleId)
+    if (!user) {
+        user = await findUserByEmail(googleProfile.email);
+        if (user) {
+            // link to this email to the existing email
+            user = await linkGoogleIdToUser(user.id, googleProfile.googleId)
+        } else {
+            // create a new account
+            user = await createGoogleUser(googleProfile.email, googleProfile.googleId);
+        }
     }
 
     const accessToken = signAccessToken({

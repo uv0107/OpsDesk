@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser } from "../services/auth.service";
+import { registerUser, loginUser, startGoogleLogin, loginWithGoogle } from "../services/auth.service";
 import { authenticate } from "../middlewares/auth.middleware";
 
 export const authRouter = Router();
@@ -40,3 +40,34 @@ authRouter.get("/profile", authenticate, (req, res) => {
         data: req.user,
     })
 })
+
+// api/auth/google
+// google consent screen
+
+authRouter.get("/google", (_req, res) => {
+    const googleAuthUrl = startGoogleLogin();
+    res.redirect(googleAuthUrl);
+})
+
+// api/auth/google/callback
+// here google consent screen will redirect the user
+
+authRouter.get("/google/callback", async (req, res, next) => {
+
+    try {
+
+        const code = req.query.code as string | undefined;
+        const { accessToken } = await loginWithGoogle(code || "");
+
+        return res.status(200).json({
+            success: true,
+            message: "Google login successful",
+            data: { accessToken },
+        })
+
+    } catch (error) {
+        next(error);
+    }
+
+})
+

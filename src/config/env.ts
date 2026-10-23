@@ -17,6 +17,15 @@ export const env = {
     databaseUrl: checkRequiredEnvVariables("DATABASE_URL"),
     jwtSecret: process.env.JWT_SECRET || "super_secret_jwt",
     jwtExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? "15m",
+    cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
+    cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
+    redisurl: process.env.REDIS_URL || "redis://localhost:6385",
+    googleClientId: checkRequiredEnvVariables("GOOGLE_CLIENT_ID"),
+    googleClientSecret: checkRequiredEnvVariables("GOOGLE_CLIENT_SECRET"),
+    googleRedirectUrl: checkRequiredEnvVariables("GOOGLE_CALLBACK_URL"),
+
 } as const;
+
 
 

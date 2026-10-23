@@ -6,6 +6,7 @@ import { Router } from "express";
 import { authRouter } from "./auth.routes";
 import { userTasksRouter } from "./user.tasks.routes";
 import { adminTaskRouter } from "./admin.tasks.routes";
+import { adminBannerRouter } from "./admin.banner.routes";
 
 export const apiRouter = Router();
 
@@ -16,3 +17,4 @@ apiRouter.use(healthRouter);
 apiRouter.use("/auth", authRouter)
 apiRouter.use("/tasks", userTasksRouter)
 apiRouter.use("/admin/tasks", adminTaskRouter)
+apiRouter.use("/admin/banner", adminBannerRouter);
