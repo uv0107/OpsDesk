@@ -1,4 +1,4 @@
-# Capstone Project - Scalable Node.js & TypeScript Backend
+# OpsDesk - Scalable Node.js & TypeScript Backend
 
 A production-grade, modular Node.js backend built with TypeScript, Express, PostgreSQL, Redis, BullMQ, and Cloudinary. It features JWT authentication, Google OAuth 2.0, role-based access control, distributed background jobs, Redis caching, and automated database migrations.
 
